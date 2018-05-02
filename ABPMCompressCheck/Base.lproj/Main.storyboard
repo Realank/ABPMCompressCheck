@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14105" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14105"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -799,6 +799,14 @@
                                     <action selector="openCompressedFile:" target="XfG-lQ-9wD" id="CI0-MU-f8I"/>
                                 </connections>
                             </button>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="R6o-QW-Wkd">
+                                <rect key="frame" x="20" y="12" width="112" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="@Realank Ver: 1.3" id="ysl-If-lLo">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                         <constraints>
                             <constraint firstItem="WGX-eR-FkC" firstAttribute="top" secondItem="0Sk-Rf-72v" secondAttribute="bottom" constant="20" id="3Vn-ew-dtr"/>
@@ -812,6 +820,8 @@
                             <constraint firstAttribute="trailing" secondItem="5Ca-C7-WCx" secondAttribute="trailing" constant="20" id="9z5-wb-xbW"/>
                             <constraint firstItem="AmM-1m-jQm" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" id="BJN-JR-GfY"/>
                             <constraint firstAttribute="bottom" secondItem="1Wd-Nj-a7C" secondAttribute="bottom" constant="12" id="MGX-zX-fXl"/>
+                            <constraint firstAttribute="bottom" secondItem="R6o-QW-Wkd" secondAttribute="bottom" constant="12" id="f4B-Ol-N77"/>
+                            <constraint firstItem="R6o-QW-Wkd" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="22" id="f5k-Lu-B2t"/>
                             <constraint firstItem="0Sk-Rf-72v" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="gdZ-2a-Tyh"/>
                             <constraint firstItem="lqn-T7-DT5" firstAttribute="width" secondItem="WGX-eR-FkC" secondAttribute="width" id="lJq-vm-eVr"/>
                             <constraint firstItem="lqn-T7-DT5" firstAttribute="top" secondItem="AmM-1m-jQm" secondAttribute="bottom" constant="20" id="pdM-Yc-TyB"/>

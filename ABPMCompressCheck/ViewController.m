@@ -59,7 +59,7 @@
             NSString* content = [[NSString alloc] initWithContentsOfFile:pathString encoding:NSUTF8StringEncoding error:nil];
             if (compressedFile) {
                 NSString* cleanContent=[content stringByReplacingOccurrencesOfString:@" " withString:@""];
-                cleanContent=[content stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+                cleanContent=[cleanContent stringByReplacingOccurrencesOfString:@"\n" withString:@""];
                 self.compressedContentString = cleanContent;
             }else{
                 NSArray* numArray = [content componentsSeparatedByString:@"\n"];
@@ -86,7 +86,7 @@
 - (IBAction)compare:(id)sender {
     
     if (_compressedContentString.length == 0 || _rawContentString.length == 0) {
-        [self compareResultMatch:NO];
+        [self compareResultMatch:NO failReason:@"输入为空"];
         return;
     }
     NSData* compressedData = [self dataWithString:_compressedContentString];
@@ -94,9 +94,15 @@
     const uint8_t* readBuffer = [compressedData bytes];
     uint8_t* writeBuffer = malloc(sizeof(uint8_t) * BufferSize * 4);
     size_t size = decompressFile4bit(readBuffer, compressedData.length, writeBuffer);
-    if (size != rawData.length) {
-        [self compareResultMatch:NO];
+    if (size == -1) {
+        [self compareResultMatch:NO failReason:@"解压buffer错误"];
         return;
+    }else if(size == -2){
+        [self compareResultMatch:NO failReason:@"CRC错误"];
+        return;
+    }else if (size != rawData.length) {
+        [self compareResultMatch:NO failReason:@"解压长度错误"];
+//        return;
     }
     const uint8_t* rawDataBytes = [rawData bytes];
     for (int i = 0; i < size; i+=2) {
@@ -104,21 +110,21 @@
         long right = (rawDataBytes[i] << 8) + rawDataBytes[i+1];
         NSLog(@"%d vs %d",left,right);
         if (left != right) {
-            [self compareResultMatch:NO];
+            [self compareResultMatch:NO failReason:@"内容不匹配"];
             return;
         }
         
     }
-    [self compareResultMatch:YES];
+    [self compareResultMatch:YES failReason:nil];
 }
 
-- (void)compareResultMatch:(BOOL)isMatch{
+- (void)compareResultMatch:(BOOL)isMatch failReason:(NSString*)reason{
     NSLog(@"result %d",isMatch);
     if (isMatch) {
         _resultLabel.stringValue = @"匹配成功";
         _resultLabel.textColor = [NSColor greenColor];
     }else{
-        _resultLabel.stringValue = @"匹配失败";
+        _resultLabel.stringValue = [NSString stringWithFormat:@"匹配失败:%@",reason];
         _resultLabel.textColor = [NSColor redColor];
     }
 }
@@ -166,12 +172,12 @@ size_t decompressFile4bit(const uint8_t* compressedDataBuffer,size_t size,uint8_
     uint16_t result = CrcCalc(compressedDataBuffer+4,size-4);
     if (result != check) {
         printf("CRC Check Failed\n");
-        return -1;
+        return -2;
     }
     
     for (int i = 8; i < size * 2; i++) {
         int8_t delta = fourBitNum(compressedDataBuffer, i) - 7;
-        if (i/2 < size - 4) {
+        if (i/2 <= size - 4) {
             uint8_t fourBit1 = fourBitNum(compressedDataBuffer, i);
             uint8_t fourBit2 = fourBitNum(compressedDataBuffer, i+1);
             uint8_t fourBit3 = fourBitNum(compressedDataBuffer, i+2);
@@ -209,7 +215,6 @@ size_t decompressFile4bit(const uint8_t* compressedDataBuffer,size_t size,uint8_
         writeLength += 2;
         previousValue = pressureData;
 //        sum += pressureData;
-
     }
 
     return writeLength;
